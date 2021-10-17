@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/Quizando/static/css/main.bb056049.chunk.css",
+    "main.js": "/Quizando/static/js/main.eb37c54c.chunk.js",
+    "main.js.map": "/Quizando/static/js/main.eb37c54c.chunk.js.map",
+    "runtime-main.js": "/Quizando/static/js/runtime-main.ad7419c9.js",
+    "runtime-main.js.map": "/Quizando/static/js/runtime-main.ad7419c9.js.map",
+    "static/css/2.0a9ec390.chunk.css": "/Quizando/static/css/2.0a9ec390.chunk.css",
+    "static/js/2.0874735d.chunk.js": "/Quizando/static/js/2.0874735d.chunk.js",
+    "static/js/2.0874735d.chunk.js.map": "/Quizando/static/js/2.0874735d.chunk.js.map",
+    "static/js/3.4ec59b5d.chunk.js": "/Quizando/static/js/3.4ec59b5d.chunk.js",
+    "static/js/3.4ec59b5d.chunk.js.map": "/Quizando/static/js/3.4ec59b5d.chunk.js.map",
+    "index.html": "/Quizando/index.html",
+    "static/css/2.0a9ec390.chunk.css.map": "/Quizando/static/css/2.0a9ec390.chunk.css.map",
+    "static/css/main.bb056049.chunk.css.map": "/Quizando/static/css/main.bb056049.chunk.css.map",
+    "static/js/2.0874735d.chunk.js.LICENSE.txt": "/Quizando/static/js/2.0874735d.chunk.js.LICENSE.txt",
+    "static/media/music.8d14102f.mp3": "/Quizando/static/media/music.8d14102f.mp3"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ad7419c9.js",
+    "static/css/2.0a9ec390.chunk.css",
+    "static/js/2.0874735d.chunk.js",
+    "static/css/main.bb056049.chunk.css",
+    "static/js/main.eb37c54c.chunk.js"
+  ]
+}
