@@ -9,22 +9,16 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import promiseMiddleware from "redux-promise";
 import ReduxThunk from "redux-thunk";
-import { HashRouter } from "react-router-dom";
+import { AuthContextProvider } from "./Context/AuthContext";
+import { BrowserRouter } from "react-router-dom";
 const myStore = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore);
 
 ReactDOM.render(
-  <Provider
-    store={myStore(
-      Reducer,
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
-    )}
-  >
-    <HashRouter>
+  <AuthContextProvider>
+    <BrowserRouter>
       <App />
-    </HashRouter>
-  </Provider>,
-
+    </BrowserRouter>
+  </AuthContextProvider>,
   document.getElementById("root")
 );
 

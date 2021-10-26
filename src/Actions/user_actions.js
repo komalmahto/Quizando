@@ -3,11 +3,12 @@ import { LOGIN_USER, REGISTER_USER, AUTH_USER, LOGOUT_USER } from "./types";
 import { USER_SERVER } from "../config.js";
 
 export function registerUser(dataToSubmit) {
-  console.log("aya actions");
+  console.log("aya actions register ");
   const request = axios
     .post(`${USER_SERVER}/signup`, dataToSubmit)
     .then((response) => response.data);
   console.log(request);
+
   return {
     type: REGISTER_USER,
     payload: request,
@@ -26,9 +27,10 @@ export function loginUser(dataToSubmit) {
 }
 
 export async function auth() {
-  const request = await axios.get(`${USER_SERVER}/user`);
-  //.then((response) => response.data);
-  console.log(request.data);
+  const request = await axios
+    .get(`${USER_SERVER}/user`)
+    .then((response) => response.data);
+  console.log(request);
   return {
     type: AUTH_USER,
     payload: request,

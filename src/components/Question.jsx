@@ -11,7 +11,11 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import music from "../music.mp3";
+import wrong_answer from "../Wrong-answer.mp3";
+import correct_answer from "../Correct-answer.mp3";
 import axios from "axios";
+import DelayComponent from "./DelayComponent";
+import radial from "../radial_ray2.mp4";
 const useAudio = (url, userToken) => {
   const [audio] = useState(new Audio(url));
   const [playing, setPlaying] = useState(userToken);
@@ -31,8 +35,16 @@ const useAudio = (url, userToken) => {
 
   return [playing, toggle];
 };
-function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
+function Question({
+  question,
+  ResultId,
+  setQuestionIdx,
+  questionIdx,
+  setNextQues,
+}) {
+  console.log(setNextQues, typeof setNextQues);
   const userToken = JSON.parse(localStorage.getItem("user")) || null;
+  //console.log(userToken.token);
   const [playing, toggle] = useAudio(music, userToken);
   const [color, setColor] = useState(false);
   const [check, setcheck] = useState(-1);
@@ -40,8 +52,11 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
   const [questionRem, setQuestionRem] = useState(25);
   const [timer, setTimer] = useState(10000);
   const [points, setPoints] = useState(0);
+  const [load, setLoad] = useState(null);
   const [selected, setSelected] = useState(null);
   const [classs, setClasss] = useState("");
+  const [show, setShow] = useState(false);
+  const [showNext, setNext] = useState(false);
   const [correctOption, setCorrectOption] = useState(null);
   const [button, setButton] = useState({
     one: "",
@@ -49,17 +64,32 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
     three: "",
     four: "",
   });
+  if (!show && !showNext) {
+    setTimeout(function () {
+      setShow(true);
+    }, 14000);
+  }
+  if (showNext) {
+    setTimeout(function () {
+      setNext(false);
+      setShow(true);
+    }, 3000);
+  }
   // const [button1, setButton1] = useState(null);
   // const [button2, setButton2] = useState(null);
   // const [button3, setButton3] = useState(null);
   // const [button4, setButton4] = useState(null);
+  // function timeout(ms) {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // }
 
   // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (timer > 0) setTimer(timer - 1);
-  //   }, 1);
-  //   return () => clearInterval(interval);
-  // }, [timer]);
+  //   if (showNext === true || show) {
+  //     setTimeout(() => {
+  //       if (timer > 0) setTimer(timer - 1);
+  //     }, 1);
+  //   }
+  // }, [show, timer, showNext]);
 
   // const handleSelect = async (i) => {
   //   let URL = `http://13.233.83.134:8010/common/quiz/submitAnswer?resultId=${ResultId}&quesId=${question._id}&answer=${i}&score=${points}`;
@@ -77,17 +107,30 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
   //     }
   //   }
   // };
-  const next = (e) => {
+
+  const next = async (e) => {
     setPoints(timer);
-    setTimer(10000);
+    setTimer(11500);
     e.preventDefault();
     setSelected(null);
     setClasss(null);
     setButton({ one: "", two: "", three: "", four: "" });
-    setQuestionIdx((prev) => ++prev);
+    if (setNext === true) setQuestionIdx((prev) => ++prev);
     setPoints(timer);
-    setTimer(10000);
+
+    setShow(false);
+    setNext(true);
+
+    // async function sleep(fn, ...args) {
+    //   return fn(...args);
+    // }
+    // const x = async () => {
+
+    //   await setTimeout(async function () {}, 3000);
+    // };
+    // x();
   };
+
   const handleSelectOption = async (x, type) => {
     let URL = `http://13.233.83.134:8010/common/quiz/submitAnswer?resultId=${ResultId}&quesId=${question._id}&answer=${x}&score=${points}`;
     try {
@@ -100,7 +143,8 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
       console.log(res.data.payload.isCorrect);
       if (x == res.data.payload.correctOption) {
         setButton((prev) => ({ ...prev, [type]: "select" }));
-
+        // const audioTune = new Audio(correct_answer);
+        // audioTune.play();
         setColor(true);
         setcheck(1);
         setScore(res.data.payload.total);
@@ -109,7 +153,8 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
         //document.getElementById(e.target.name).classList.add("green");
       } else {
         setButton((prev) => ({ ...prev, [type]: "wrong" }));
-
+        // const audioTune = new Audio(wrong_answer);
+        // audioTune.play();
         console.log(x);
         console.log(res.data.payload.correctOption);
         setColor(false);
@@ -129,9 +174,17 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
   return question ? (
     <div>
       <div className="question__Container">
+        {!show && !showNext ? (
+          <div>
+            <video controls width="100%" height="100%" autoPlay={true}>
+              <source src={radial} type="video/mp4" />
+              <source src={radial} type="video/ogg" />
+            </video>
+          </div>
+        ) : (
+          ""
+        )}
         <FormControl component="fieldset">
-          <h3> {question.content.question}</h3>
-
           {/* <RadioGroup
             aria-label="gender"
             defaultValue="female"
@@ -139,76 +192,116 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
             onChange={handleSelectOption}
             required
           > */}
-          <div className="board__container__answers">
-            <div className="board">
-              <div className={`fade-in one `} id="one">
-                <button
-                  className={`singleOption ${button.one}`}
-                  value={question.options[0]._id}
-                  // control={<Radio />}
-                  key={0}
-                  onClick={() =>
-                    handleSelectOption(question.options[0]._id, "one")
-                  }
-                  style={{ width: "100%" }}
-                >
-                  {question.options[0].text}
-                </button>
-              </div>
-            </div>
-            <div className="board">
-              <div className={`fade-in two `} id="two">
-                <button
-                  className={`singleOption ${button.two}`}
-                  value={question.options[0]._id}
-                  // control={<Radio />}
-                  key={1}
-                  name="two"
-                  onClick={() =>
-                    handleSelectOption(question.options[1]._id, "two")
-                  }
-                  style={{ width: "100%" }}
-                >
-                  {question.options[1].text}
-                </button>
-              </div>
-            </div>
 
-            <div className="board">
-              <div className={`fade-in three `} id="three">
-                <button
-                  className={`singleOption ${button.three}`}
-                  value={question.options[2]._id}
-                  // control={<Radio />}
-                  key={2}
-                  onClick={() =>
-                    handleSelectOption(question.options[2]._id, "three")
-                  }
-                  style={{ width: "100%" }}
-                >
-                  {question.options[2].text}
-                </button>
+          <div>
+            {/* <div className="board__container__answers"> */}
+            {!show && !showNext ? (
+              <>
+                {/* <div id="bounce-in" className="bounce-in">
+                    <h1 className="bounce-in-text">Get Ready</h1>
+                  </div> */}
+              </>
+            ) : showNext ? (
+              <div id="bounce-in" className="bounce-in">
+                <h1 className="bounce-in-text">Next Question</h1>
               </div>
-            </div>
-            <div className="board">
-              <div className={`fade-in four `} id="four">
-                <button
-                  className={`singleOption ${button.four}`}
-                  value={question.options[3]._id}
-                  // control={<Radio />}
-                  key={3}
-                  name="four"
-                  onClick={() =>
-                    handleSelectOption(question.options[3]._id, "four")
-                  }
-                  style={{ width: "100%" }}
-                >
-                  {question.options[3].text}
-                </button>
-              </div>
-            </div>
+            ) : (
+              <div style={{ marginTop: "25%" }}>
+                <h3> {question.content.question}</h3>
+                <div className="board__container__answers">
+                  <div className="board">
+                    <div className={`fade-in one `} id="one">
+                      <button
+                        className={`singleOption ${button.one}`}
+                        value={question.options[0]._id}
+                        // control={<Radio />}
+                        key={0}
+                        onClick={() =>
+                          handleSelectOption(question.options[0]._id, "one")
+                        }
+                        style={{ width: "100%" }}
+                      >
+                        {question.options[0].text}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="board">
+                    <div className={`fade-in two `} id="two">
+                      <button
+                        className={`singleOption ${button.two}`}
+                        value={question.options[0]._id}
+                        // control={<Radio />}
+                        key={1}
+                        name="two"
+                        onClick={() =>
+                          handleSelectOption(question.options[1]._id, "two")
+                        }
+                        style={{ width: "100%" }}
+                      >
+                        {question.options[1].text}
+                      </button>
+                    </div>
+                  </div>
 
-            {/* {["one", "two", "three", "four"].map((item, idx) => {
+                  <div className="board">
+                    <div className={`fade-in three `} id="three">
+                      <button
+                        className={`singleOption ${button.three}`}
+                        value={question.options[2]._id}
+                        // control={<Radio />}
+                        key={2}
+                        onClick={() =>
+                          handleSelectOption(question.options[2]._id, "three")
+                        }
+                        style={{ width: "100%" }}
+                      >
+                        {question.options[2].text}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="board">
+                    <div className={`fade-in four `} id="four">
+                      <button
+                        className={`singleOption ${button.four}`}
+                        value={question.options[3]._id}
+                        // control={<Radio />}
+                        key={3}
+                        name="four"
+                        onClick={() =>
+                          handleSelectOption(question.options[3]._id, "four")
+                        }
+                        style={{ width: "100%" }}
+                      >
+                        {question.options[3].text}
+                      </button>
+                    </div>
+                  </div>
+                  {setNextQues === true ? (
+                    <Button
+                      variant="contained"
+                      onClick={next}
+                      endIcon={<NavigateNextIcon sx={{ color: "#ffff" }} />}
+                    >
+                      Next
+                    </Button>
+                  ) : (
+                    " "
+                  )}
+                </div>
+              </div>
+            )}
+            {/* <div
+                id="bounce-in"
+                className="bounce-in"
+                style={{
+                  visibility: "hidden",
+                  border: "none",
+                }}
+              >
+                <h1 className="bounce-in-text">Get Ready</h1>
+              </div> */}
+          </div>
+          {/* {["one", "two", "three", "four"].map((item, idx) => {
             return (
               <div className="board">
                 <div
@@ -250,12 +343,7 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
               </div>
             );
           })} */}
-            <NavigateNextIcon
-              onClick={next}
-              style={{ color: "white" }}
-              fontSize="large"
-            />
-          </div>
+
           {/* </RadioGroup> */}
         </FormControl>
       </div>
@@ -279,7 +367,8 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
           <p>Questions Remaining</p>
         </div>
         <div className="question__footer__sub">
-          <h2>{timer}</h2>
+          {timer > 10000 ? <h2>10000</h2> : <h2>{timer}</h2>}
+
           <p>Points</p>
         </div>
         <div className="question__footer__sub">
@@ -294,5 +383,7 @@ function Question({ question, ResultId, setQuestionIdx, questionIdx }) {
     </div>
   ) : null;
 }
-
+// setTimeout(function () {
+//   document.getElementById("hide").style.visibility = "visible";
+// }, 3000);
 export default Question;

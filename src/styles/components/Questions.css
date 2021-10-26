@@ -13,6 +13,7 @@
   margin-bottom: 0%;
   background-color: black;
   padding: 30px;
+  height: 620px;
 }
 .button__div {
   width: 60%;
@@ -106,21 +107,6 @@ h3 {
   font-size: 25px;
 }
 
-.sound__on__off {
-  height: auto;
-  margin: 0 auto;
-  color: var(--light);
-  position: relative;
-  width: 50%;
-  text-align: center;
-  align-items: center;
-}
-.wrapper_sound__on__off {
-  width: 80%;
-  margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
 .question__footer {
   width: 80%;
   margin: 0 auto;
@@ -129,6 +115,7 @@ h3 {
   grid-template-columns: repeat(5, auto);
   text-align: center;
   margin-bottom: 40px;
+  max-width: 80%;
 }
 .question__footer__sub {
   border: 1px solid gray;
@@ -145,13 +132,11 @@ h3 {
 .select {
   background-color: rgb(7, 207, 0);
   color: white;
-  box-shadow: 0 0 1px black;
 }
 
 .wrong {
   background-color: rgb(233, 0, 0);
   color: white;
-  box-shadow: 0 0 1px black;
 }
 .singleOption {
   width: 40%;
@@ -159,4 +144,32 @@ h3 {
   padding: 5px auto;
   margin: 2px;
   border: none;
+}
+.bounce-in {
+  animation: bounce-in 3s ease infinite;
+}
+
+.bounce-in-text {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 500px;
+  font-weight: 800;
+  font-family: "Paytone One", sans-serif;
+  color: var(--light);
+}
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
